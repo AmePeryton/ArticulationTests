@@ -1,0 +1,227 @@
+{
+    "sBodyPartIndex": 6,
+    "sBodyParts": [
+        {
+            "id": 0,
+            "parentId": -1,
+            "symmetryType": 2,
+            "isAxial": true,
+            "numReps": 1,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotation": {
+                "x": 270.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 1.0
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            }
+        },
+        {
+            "id": 1,
+            "parentId": 0,
+            "symmetryType": 2,
+            "isAxial": false,
+            "numReps": 6,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": -0.25,
+                "z": 1.0
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 1.0
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            }
+        },
+        {
+            "id": 2,
+            "parentId": 1,
+            "symmetryType": 2,
+            "isAxial": false,
+            "numReps": 6,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 0.5
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.25
+            }
+        },
+        {
+            "id": 3,
+            "parentId": 2,
+            "symmetryType": 2,
+            "isAxial": false,
+            "numReps": 6,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 0.5
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.25
+            }
+        },
+        {
+            "id": 4,
+            "parentId": 3,
+            "symmetryType": 2,
+            "isAxial": false,
+            "numReps": 6,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 0.5
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.25
+            }
+        },
+        {
+            "id": 5,
+            "parentId": 4,
+            "symmetryType": 2,
+            "isAxial": false,
+            "numReps": 6,
+            "plaxisDirection": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0
+            },
+            "plaxisPoint": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.05000000074505806,
+                "y": 0.05000000074505806,
+                "z": 1.0
+            },
+            "bulkOffset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.5
+            }
+        }
+    ]
+}
