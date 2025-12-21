@@ -17,85 +17,39 @@ public class NewGizmoProximalBall : NewGizmoController
 	// On continuous interaction with this gizmo
 	public override void InteractHold()
 	{
-		switch (ghostPart.selectedPart.data.sRef.symmetryType)
+		if (ghostPart.selectedPart.data.sRef.isAxial)
 		{
-			case SymmetryType.Asymmetrical:
-				if (ghostPart.selectedPart.data.sRef.isAxial)
-				{
+			switch (ghostPart.selectedPart.data.sRef.symmetryType)
+			{
+				case SymmetryType.Asymmetrical:
+					// If axial and bilateral, print an error message
 					Debug.Log("An asymmetrical part should not be axial!");
-				}
-				else
-				{
-					if (ghostPart.selectedPart.data.parent == null)
-					{
-						MoveFree();
-					}
-					else
-					{
-						MoveOnParent();
-					}
-				}
-				break;
-			case SymmetryType.Bilateral:
-				if (ghostPart.selectedPart.data.sRef.isAxial)
-				{
-					// plane
+					break;
+				case SymmetryType.Bilateral:
+					// If axial and bilateral, move on the plane of symmetry
 					MoveOnPlane();
-				}
-				else
-				{
-					if (ghostPart.selectedPart.data.parent == null)
-					{
-						MoveFree();
-					}
-					else
-					{
-						MoveOnParent();
-					}
-				}
-				break;
-			case SymmetryType.RadialRotate:
-				if (ghostPart.selectedPart.data.sRef.isAxial)
-				{
-					// axis
+					break;
+				case SymmetryType.RadialRotate:
+					// If axial and radial, move on the axis of symmetry
 					MoveOnAxis();
-				}
-				else
-				{
-					if (ghostPart.selectedPart.data.parent == null)
-					{
-						MoveFree();
-					}
-					else
-					{
-						MoveOnParent();
-					}
-				}
-				break;
-			default:
-				break;
+					break;
+				default:
+					break;
+			}
 		}
-		/* if root:
-			* if axial:
-				* if asymmetrical:
-					* should not happen, print error message
-				* if bilateral:
-					* project mouse to symmetry plane
-				* if radial:
-					* project mouse to symmetry axis
-			* if not axial:
-				* move freely
-		 * if not root:
-			* if axial:
-				* if asymmetrical:
-					* should not happen, print error message
-				* if bilateral:
-					* move on symmetry plane
-				* if radial:
-					* move on symmetry axis
-			* if not axial:
-				* move on parent surface
-		 */
+		else
+		{
+			if (ghostPart.selectedPart.data.parent == null)
+			{
+				// If nonaxial and the root, move freely (on plane orthogonal to camera forward vector)
+				MoveFree();
+			}
+			else
+			{
+				// If nonaxial and not the root, move on the parent part's surface
+				MoveOnParent();
+			}
+		}
 	}
 
 	// On ending interaction with this gizmo, return an editCommand or multiEditCommand based on changes taken
@@ -117,11 +71,10 @@ public class NewGizmoProximalBall : NewGizmoController
 		}
 	}
 
-	// Move proximal ball perpendicular to camera, without restriction
+	// Move proximal ball perpendicular to camera, keeping the same depth from the camera
 	private void MoveFree()
 	{
 		// Get perpendicular distance from the proximal ball to the camera
-		// TODO: check if it would be better to set this once instead of recalculating over and over
 		float depth = Camera.main.transform.InverseTransformPoint(transform.position).z;
 		// Get world position of the mouse at the given depth from the camera
 		Vector3 rawNewPosition = MouseToWorldScreen(depth);
@@ -149,11 +102,12 @@ public class NewGizmoProximalBall : NewGizmoController
 		ghostPart.position = localNewPosition;
 	}
 
+	// Move the proximal ball on the plane of symmetry
 	private void MoveOnPlane()
 	{
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.selectedPart.data.parent != null)
 		{
 			if (ghostPart.selectedPart.data.parent.IsSpaceFlipped())
@@ -171,8 +125,8 @@ public class NewGizmoProximalBall : NewGizmoController
 
 		// Translate the plane from parent's space to world space
 		Plane worldPlane = new(
-			ghostPart.selectedPart.transform.parent.InverseTransformDirection(truePlaxisDirection), 
-			ghostPart.selectedPart.transform.parent.InverseTransformPoint(truePlaxisPoint));
+			ghostPart.selectedPart.transform.parent.TransformDirection(truePlaxisDirection), 
+			ghostPart.selectedPart.transform.parent.TransformPoint(truePlaxisPoint));
 
 		// Get world position of the mouse on the plane
 		Vector3 rawNewPosition = MouseToWorldPlane(worldPlane);
@@ -182,10 +136,38 @@ public class NewGizmoProximalBall : NewGizmoController
 		ghostPart.position = localNewPosition;
 	}
 
+	// Move the proximal ball on the axis of symmetry
 	private void MoveOnAxis()
 	{
+        // Space flipping variables (if rep index chain has an odd number of reflected parts)
+        Vector3 flipA = Vector3.one;    // For positions
+        Vector3 flipB = Vector3.one;    // For rotations / directions
+        if (ghostPart.selectedPart.data.parent != null)
+        {
+            if (ghostPart.selectedPart.data.parent.IsSpaceFlipped())
+            {
+                // If the parent part's space (the one that this part moves in) is reflected, set flip variables
+                flipA = new(-1, 1, 1);
+                flipB = new(1, -1, -1);
+            }
+        }
 
-	}
+        // Get true plaxis direction
+        Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.selectedPart.data.sRef.plaxisDirection);
+        // Get true plaxis point
+        Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.selectedPart.data.sRef.plaxisPoint);
+
+		// Translate the axis and point from the parent's space into world space
+        Vector3 worldAxis = ghostPart.selectedPart.transform.parent.TransformDirection(truePlaxisDirection);
+		Vector3 worldPoint = ghostPart.selectedPart.transform.parent.TransformPoint(truePlaxisPoint);
+
+		// Get world position of the mouse on the plane
+		Vector3 rawNewPosition = MouseToWorldAxis(worldAxis, worldPoint);
+        // Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
+        Vector3 localNewPosition = ghostPart.selectedPart.transform.parent.InverseTransformPoint(rawNewPosition);
+        // Set ghost part position to this local position
+        ghostPart.position = localNewPosition;
+    }
 
 	// Get the position after it has been un-transformed (idk what to call it, unreflected ? unrotated?
 	// Basically the position to set the new serialized position such that the selected concrete goes to the position

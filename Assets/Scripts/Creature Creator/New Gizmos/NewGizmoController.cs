@@ -48,6 +48,31 @@ public abstract class NewGizmoController : MonoBehaviour
 		return Vector3.zero;
 	}
 
+	public Vector3 MouseToWorldAxis(Vector3 direction, Vector3 point)
+	{
+		Vector3 camFwd = Camera.main.transform.forward;
+
+		Plane plane = new(
+			camFwd - Vector3.Project(camFwd, direction),
+			point);
+
+		// Get ray from the camera through the mouse position in world space
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		// Default hitPoint of the input point
+		Vector3 hitPoint = point;
+
+		// Check if the ray hits the given plane
+		if (plane.Raycast(ray, out float dist))
+		{
+			// If so, return intersection point
+			hitPoint = ray.GetPoint(dist);
+		}
+
+		// Project the plane hit point to the actual axis, and account for point offset
+		return Vector3.Project(hitPoint - point, direction) + point;
+	}
+
 	// Get a world point on the mouse at the given depth from the camera
 	public Vector3 MouseToWorldScreen(float depth)
 	{
