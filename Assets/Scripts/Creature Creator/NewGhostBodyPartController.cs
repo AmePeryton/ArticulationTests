@@ -1,16 +1,26 @@
-using UnityEngine;
+using  UnityEngine;
 
 public class NewGhostBodyPartController : MonoBehaviour
 {
-	[Header("Copied Part Data")]
 	public NewBodyController body;
 	public NewBodyPartController selectedPart;
+
+	[Header("Copied Part Data")]
+	// Body Part Controller Data
 	public NewBodyPartController parentPart;
-	public Transform parentTransform;	// the parent transform of the part, either another part or the body itself
-	public Vector3 position;	// meters, from parent proximal point
-	public Vector3 rotation;	// degrees, from parent's forward vector
-	public Vector3 scale;		// meters, bulk size
-	public Vector3 bulkOffset;  // meters, from center between proximal and distal points
+	public Transform parentTransform;	// The parent transform of the part, either another part or the body itself
+	// Concrete Part Data
+	public Vector3 position;		// Meters, from parent proximal point
+	public Vector3 rotation;		// Degrees, from parent's forward vector
+	public Vector3 scale;			// Meters, bulk size
+	public Vector3 bulkOffset;      // Meters, from center between proximal and distal points
+	public int repIndex;			// The exact repetition that this concrete part represents
+	// Serialized Part Data 
+	public SymmetryType symmetryType;
+	public bool isAxial;
+	public int numReps;
+	public Vector3 plaxisDirection;	// Normal direction of the plane of symmetry, or the direction of the axis of symmetry
+	public Vector3 plaxisPoint;		// A point that the plane / axis of symmetry passes through
 
 	[Header("Gizmos")]
 	public NewGizmoProximalBall proximalBall;
@@ -32,7 +42,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public GameObject[] arrows;
 	public GameObject rotationBall;
 	public GameObject[] rotationRings;
-	public GameObject[] bulkQuads;  // Left, Right, Bottom, Top, Back, Front
+	public GameObject[] bulkQuads;	// Left, Right, Bottom, Top, Back, Front
 
 	[Header("Visual Settings")]
 	public float scaleMult;
@@ -73,25 +83,42 @@ public class NewGhostBodyPartController : MonoBehaviour
 			if (part.data.parent != null)
 			{
 				parentPart = body.bodyPartControllerDict[part.data.parent];
+				parentTransform = parentPart.transform;
 			}
 			else
 			{
 				parentPart = null;
+				parentTransform = body.transform;
 			}
-			parentTransform = part.transform.parent;
+
 			position = part.data.position;
 			rotation = part.data.rotation;
 			scale = part.data.scale;
 			bulkOffset = part.data.bulkOffset;
+			repIndex = part.data.repIndex;	
+
+			symmetryType = part.data.sRef.symmetryType;
+			isAxial = part.data.sRef.isAxial;
+			numReps = part.data.sRef.numReps;
+			plaxisDirection = part.data.sRef.plaxisDirection;
+			plaxisPoint = part.data.sRef.plaxisPoint;
 		}
 		else
 		{
 			parentPart = null;
 			parentTransform = body.transform;
+
 			position = Vector3.zero;
 			rotation = Vector3.zero;
 			scale = Vector3.zero;
 			bulkOffset = Vector3.zero;
+			repIndex = -1;
+
+			symmetryType = SymmetryType.Asymmetrical;
+			isAxial = false;
+			numReps = -1;
+			plaxisDirection = Vector3.forward;
+			plaxisPoint = new();
 		}
 	}
 
@@ -150,17 +177,17 @@ public class NewGhostBodyPartController : MonoBehaviour
 	{
 		switch (editMode)
 		{
-			case EditMode.Normal:   // Normal
+			case EditMode.Normal:	// Normal
 				normalGizmoHolder.SetActive(true);
 				advancedGizmoHolder.SetActive(false);
 				bulkGizmoHolder.SetActive(false);
 				break;
-			case EditMode.Advanced: // Advanced
+			case EditMode.Advanced:	// Advanced
 				normalGizmoHolder.SetActive(false);
 				advancedGizmoHolder.SetActive(true);
 				bulkGizmoHolder.SetActive(false);
 				break;
-			case EditMode.Bulk:     // Bulk
+			case EditMode.Bulk:		// Bulk
 				normalGizmoHolder.SetActive(false);
 				advancedGizmoHolder.SetActive(false);
 				bulkGizmoHolder.SetActive(true);

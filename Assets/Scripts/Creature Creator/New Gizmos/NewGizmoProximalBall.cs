@@ -17,9 +17,15 @@ public class NewGizmoProximalBall : NewGizmoController
 	// On continuous interaction with this gizmo
 	public override void InteractHold()
 	{
-		if (ghostPart.selectedPart.data.sRef.isAxial)
+		// if holding [keyChangeParent], move on surface of all parts that are not self, clones of self, or children of self (or children of the part's clones, etc.)
+		// if holding [keyMoveProximalOnly], move the proximal ball but modify the rotation, scale, bulk offset,m etc. to keep everything else in place
+		// if pressed [keyToggleAxial], toggle isAxial value (if applicable)
+		// if holding [keySnap], move according to othjer rules but then round to the grid
+			// NOTE: for parent-surface-moving actions, maybe still snap except also move to parent surface (and included corner/side/center snaps)
+
+		if (ghostPart.isAxial)
 		{
-			switch (ghostPart.selectedPart.data.sRef.symmetryType)
+			switch (ghostPart.symmetryType)
 			{
 				case SymmetryType.Asymmetrical:
 					// If axial and bilateral, print an error message
@@ -39,7 +45,7 @@ public class NewGizmoProximalBall : NewGizmoController
 		}
 		else
 		{
-			if (ghostPart.selectedPart.data.parent == null)
+			if (ghostPart.parentPart == null)
 			{
 				// If nonaxial and the root, move freely (on plane orthogonal to camera forward vector)
 				MoveFree();
@@ -108,9 +114,9 @@ public class NewGizmoProximalBall : NewGizmoController
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
 		Vector3 flipA = Vector3.one;	// For positions
 		Vector3 flipB = Vector3.one;	// For rotations / directions
-		if (ghostPart.selectedPart.data.parent != null)
+		if (ghostPart.parentPart != null)
 		{
-			if (ghostPart.selectedPart.data.parent.IsSpaceFlipped())
+			if (ghostPart.parentPart.data.IsSpaceFlipped())
 			{
 				// If the parent part's space (the one that this part moves in) is reflected, set flip variables
 				flipA = new(-1, 1, 1);
@@ -119,19 +125,19 @@ public class NewGizmoProximalBall : NewGizmoController
 		}
 
 		// Get true plaxis direction
-		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.selectedPart.data.sRef.plaxisDirection);
+		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
 		// Get true plaxis point
-		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.selectedPart.data.sRef.plaxisPoint);
+		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
 
 		// Translate the plane from parent's space to world space
 		Plane worldPlane = new(
-			ghostPart.selectedPart.transform.parent.TransformDirection(truePlaxisDirection), 
-			ghostPart.selectedPart.transform.parent.TransformPoint(truePlaxisPoint));
+			ghostPart.parentTransform.TransformDirection(truePlaxisDirection), 
+			ghostPart.parentTransform.TransformPoint(truePlaxisPoint));
 
 		// Get world position of the mouse on the plane
 		Vector3 rawNewPosition = MouseToWorldPlane(worldPlane);
 		// Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
-		Vector3 localNewPosition = ghostPart.selectedPart.transform.parent.InverseTransformPoint(rawNewPosition);
+		Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
 		// Set ghost part position to this local position
 		ghostPart.position = localNewPosition;
 	}
@@ -142,9 +148,9 @@ public class NewGizmoProximalBall : NewGizmoController
         // Space flipping variables (if rep index chain has an odd number of reflected parts)
         Vector3 flipA = Vector3.one;    // For positions
         Vector3 flipB = Vector3.one;    // For rotations / directions
-        if (ghostPart.selectedPart.data.parent != null)
+        if (ghostPart.parentPart != null)
         {
-            if (ghostPart.selectedPart.data.parent.IsSpaceFlipped())
+            if (ghostPart.parentPart.data.IsSpaceFlipped())
             {
                 // If the parent part's space (the one that this part moves in) is reflected, set flip variables
                 flipA = new(-1, 1, 1);
@@ -153,18 +159,18 @@ public class NewGizmoProximalBall : NewGizmoController
         }
 
         // Get true plaxis direction
-        Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.selectedPart.data.sRef.plaxisDirection);
+        Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
         // Get true plaxis point
-        Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.selectedPart.data.sRef.plaxisPoint);
+        Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
 
 		// Translate the axis and point from the parent's space into world space
-        Vector3 worldAxis = ghostPart.selectedPart.transform.parent.TransformDirection(truePlaxisDirection);
-		Vector3 worldPoint = ghostPart.selectedPart.transform.parent.TransformPoint(truePlaxisPoint);
+        Vector3 worldAxis = ghostPart.parentTransform.TransformDirection(truePlaxisDirection);
+		Vector3 worldPoint = ghostPart.parentTransform.TransformPoint(truePlaxisPoint);
 
 		// Get world position of the mouse on the plane
 		Vector3 rawNewPosition = MouseToWorldAxis(worldAxis, worldPoint);
         // Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
-        Vector3 localNewPosition = ghostPart.selectedPart.transform.parent.InverseTransformPoint(rawNewPosition);
+        Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
         // Set ghost part position to this local position
         ghostPart.position = localNewPosition;
     }
@@ -178,9 +184,9 @@ public class NewGizmoProximalBall : NewGizmoController
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
 		Vector3 flipA = Vector3.one;	// For positions
 		Vector3 flipB = Vector3.one;    // For rotations / directions
-		if (ghostPart.selectedPart.data.parent != null)
+		if (ghostPart.parentPart != null)
 		{
-			if (ghostPart.selectedPart.data.parent.IsSpaceFlipped())
+			if (ghostPart.parentPart.data.IsSpaceFlipped())
 			{
 				// If the parent part's space (the one that this part moves in) is reflected, set flip variables
 				flipA = new(-1, 1, 1);
@@ -189,18 +195,18 @@ public class NewGizmoProximalBall : NewGizmoController
 		}
 
 		// Get true plaxis direction
-		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.selectedPart.data.sRef.plaxisDirection);
+		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
 		// Get true plaxis point
-		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.selectedPart.data.sRef.plaxisPoint);
+		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
 
-		switch (ghostPart.selectedPart.data.sRef.symmetryType)
+		switch (ghostPart.symmetryType)
 		{
 			case SymmetryType.Asymmetrical:
 				// Asymmetrical parts only have 1 rep, no translations needed
 				serializedPosition = concretePosition;
 				break;
 			case SymmetryType.Bilateral:
-				if (ghostPart.selectedPart.data.repIndex == 0)
+				if (ghostPart.repIndex == 0)
 				{
 					// The concrete part with repIndex 0 has the same position as the serialized body part, no change needed
 					// This should include axial parts as well, since they will be repIndex 0 as well
@@ -215,7 +221,7 @@ public class NewGizmoProximalBall : NewGizmoController
 				}
 				break;
 			case SymmetryType.RadialRotate:
-				if (ghostPart.selectedPart.data.repIndex == 0)
+				if (ghostPart.repIndex == 0)
 				{
 					// The concrete part with repIndex 0 has the same position as the serialized body part, no change needed
 					// This should include axial parts as well, since they will be repIndex 0 as well
@@ -228,7 +234,7 @@ public class NewGizmoProximalBall : NewGizmoController
 					// Rotate the new point in the reverse direction for the corresponding serialized part position
 
 					// Get revolution in quaternion form
-					Quaternion r = Quaternion.AngleAxis(-ghostPart.selectedPart.data.repIndex * 360f / ghostPart.selectedPart.data.sRef.numReps, truePlaxisDirection);
+					Quaternion r = Quaternion.AngleAxis(-ghostPart.repIndex * 360f / ghostPart.numReps, truePlaxisDirection);
 
 					// Revolve position about axis
 					serializedPosition = r * (concretePosition - truePlaxisPoint) + truePlaxisPoint;
