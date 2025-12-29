@@ -665,10 +665,9 @@ public class NewCreatureCreatorUI : MonoBehaviour
 			// If parent is bilateral, PD = (1,0,0), otherwise PD = (0,0,1) (only matters for axial parents)
 			plaxisDirection = selectedPartController.data.sRef.symmetryType == SymmetryType.Bilateral ? Vector3.right : Vector3.forward,
 			plaxisPoint = Vector3.zero,
-			position = (0.5f * selectedPartController.data.sRef.scale.z + selectedPartController.data.sRef.bulkOffset.z) * Vector3.forward,
+			position = (selectedPartController.data.sRef.scale.z + selectedPartController.data.sRef.bulkOffset.z) * Vector3.forward,
 			rotation = Vector3.zero,
 			scale = selectedPartController.data.sRef.scale,
-			bulkOffset = selectedPartController.data.sRef.bulkOffset
 		};
 
 		DoCommand(new NewCommandAddBodyPart(bodyController.data.sBody, newSBodyPart));

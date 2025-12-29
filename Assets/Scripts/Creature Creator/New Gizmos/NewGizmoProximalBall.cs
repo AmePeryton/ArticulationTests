@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NewGizmoProximalBall : NewGizmoController
@@ -17,18 +18,18 @@ public class NewGizmoProximalBall : NewGizmoController
 	// On continuous interaction with this gizmo
 	public override void InteractHold()
 	{
-		// if holding [keyChangeParent], move on surface of all parts that are not self, clones of self, or children of self (or children of the part's clones, etc.)
-		// if holding [keyMoveProximalOnly], move the proximal ball but modify the rotation, scale, bulk offset,m etc. to keep everything else in place
-		// if pressed [keyToggleAxial], toggle isAxial value (if applicable)
-		// if holding [keySnap], move according to othjer rules but then round to the grid
-			// NOTE: for parent-surface-moving actions, maybe still snap except also move to parent surface (and included corner/side/center snaps)
+		// If holding [keyChangeParent], move on surface of all parts that are not self, clones of self, or children of self (or children of the part's clones, etc.)
+		// If holding [keyMoveProximalOnly], move the proximal ball but modify the rotation, scale, bulk offset,m etc. to keep everything else in place
+		// If pressed [keyToggleAxial], toggle isAxial value (if applicable)
+		// If holding [keySnap], move according to other rules but then round to the grid
+			// NOTE: For parent-surface-moving actions, maybe still snap except also move to parent surface (and included corner/side/center snaps)
 
 		if (ghostPart.isAxial)
 		{
 			switch (ghostPart.symmetryType)
 			{
 				case SymmetryType.Asymmetrical:
-					// If axial and bilateral, print an error message
+					// If axial and Asymmetrical, print an error message
 					Debug.Log("An asymmetrical part should not be axial!");
 					break;
 				case SymmetryType.Bilateral:
@@ -64,12 +65,52 @@ public class NewGizmoProximalBall : NewGizmoController
 		ghostPart.SetMainCubeVisible(false);
 
 		Vector3 newPosition = GetSerializedPosition(ghostPart.position);
+		Vector3 newRotation = ghostPart.selectedPart.data.sRef.rotation;		// TEMP
+		Vector3 newScale = ghostPart.scale;
+		Vector3 newBulkOffset = ghostPart.selectedPart.data.sRef.bulkOffset;	// TEMP
+		bool newIsAxial = ghostPart.isAxial;
+		int newNumReps = ghostPart.numReps;
 
-		if (newPosition != ghostPart.selectedPart.data.position)
+		List<INewEditCommand> commands = new();
+
+		if (newPosition != ghostPart.selectedPart.data.sRef.position)
 		{
+			Debug.Log("Changed position!");
 			return new NewCommandChangePosition(ghostPart.selectedPart.data.sRef, newPosition);
-			// if the part has a new position, translate it from whatever reflection or rotation was done on this concrete part
-			// from the original serialized part 
+		}
+		if (newRotation != ghostPart.selectedPart.data.sRef.rotation)
+		{
+			Debug.Log("Changed rotation!");
+			commands.Add(new NewCommandChangeRotation(ghostPart.selectedPart.data.sRef, newRotation));
+		}
+		if (newScale != ghostPart.selectedPart.data.sRef.scale)
+		{
+			Debug.Log("Changed scale!");
+			commands.Add(new NewCommandChangeScale(ghostPart.selectedPart.data.sRef, newScale));
+		}
+		if (newBulkOffset != ghostPart.selectedPart.data.sRef.bulkOffset)
+		{
+			Debug.Log("Changed bulk offset!");
+			commands.Add(new NewCommandChangeBulkOffset(ghostPart.selectedPart.data.sRef, newBulkOffset));
+		}
+		if (newIsAxial != ghostPart.selectedPart.data.sRef.isAxial)
+		{
+			Debug.Log("Toggled is axial!");
+			commands.Add(new NewCommandToggleIsAxial(ghostPart.selectedPart.data.sRef));
+		}
+		if (newNumReps != ghostPart.selectedPart.data.sRef.numReps)
+		{
+			Debug.Log("Changed num reps!");
+			commands.Add(new NewCommandChangeNumReps(ghostPart.selectedPart.data.sRef, newNumReps));
+		}
+
+		if (commands.Count > 1)
+		{
+			return (new NewMultiCommand(commands));
+		}
+		else if (commands.Count == 1)
+		{
+			return commands[0];
 		}
 		else
 		{
@@ -77,7 +118,13 @@ public class NewGizmoProximalBall : NewGizmoController
 		}
 	}
 
-	// Move proximal ball perpendicular to camera, keeping the same depth from the camera
+	public override void UpdateVisuals()
+	{
+		transform.localPosition = Vector3.zero;
+		transform.localScale = ghostPart.zoomScale * 0.03f * Vector3.one;
+	}
+
+	// Move the proximal ball perpendicular to camera, keeping the same depth from the camera
 	private void MoveFree()
 	{
 		// Get perpendicular distance from the proximal ball to the camera
@@ -90,6 +137,7 @@ public class NewGizmoProximalBall : NewGizmoController
 		ghostPart.position = localNewPosition;
 	}
 
+	// Move the proximal ball on the parent part's surface
 	private void MoveOnParent()
 	{
 		// Put rawPosition on parent surface
@@ -134,8 +182,8 @@ public class NewGizmoProximalBall : NewGizmoController
 			ghostPart.parentTransform.TransformDirection(truePlaxisDirection), 
 			ghostPart.parentTransform.TransformPoint(truePlaxisPoint));
 
-		// Get world position of the mouse on the plane
-		Vector3 rawNewPosition = MouseToWorldPlane(worldPlane);
+		// Get world position of the mouse on the plane (with a fallback value of the original world position)
+		Vector3 rawNewPosition = MouseToWorldPlane(worldPlane, ghostPart.selectedPart.transform.position);
 		// Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
 		Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
 		// Set ghost part position to this local position
@@ -174,92 +222,13 @@ public class NewGizmoProximalBall : NewGizmoController
         // Set ghost part position to this local position
         ghostPart.position = localNewPosition;
     }
-
-	// Get the position after it has been un-transformed (idk what to call it, unreflected ? unrotated?
-	// Basically the position to set the new serialized position such that the selected concrete goes to the position
-	private Vector3 GetSerializedPosition(Vector3 concretePosition)
-	{
-		Vector3 serializedPosition = new();
-
-		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;	// For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
-		if (ghostPart.parentPart != null)
-		{
-			if (ghostPart.parentPart.data.IsSpaceFlipped())
-			{
-				// If the parent part's space (the one that this part moves in) is reflected, set flip variables
-				flipA = new(-1, 1, 1);
-				flipB = new(1, -1, -1);
-			}
-		}
-
-		// Get true plaxis direction
-		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
-		// Get true plaxis point
-		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
-
-		switch (ghostPart.symmetryType)
-		{
-			case SymmetryType.Asymmetrical:
-				// Asymmetrical parts only have 1 rep, no translations needed
-				serializedPosition = concretePosition;
-				break;
-			case SymmetryType.Bilateral:
-				if (ghostPart.repIndex == 0)
-				{
-					// The concrete part with repIndex 0 has the same position as the serialized body part, no change needed
-					// This should include axial parts as well, since they will be repIndex 0 as well
-					serializedPosition = concretePosition;
-				}
-				else
-				{
-					// The concrete part with repIndex 1 has been reflected across the plane,
-					// Reflect the new point again for the corresponding serialized part position
-					Plane plane = new (truePlaxisDirection, truePlaxisPoint);
-					serializedPosition = 2 * plane.ClosestPointOnPlane(concretePosition) - concretePosition;
-				}
-				break;
-			case SymmetryType.RadialRotate:
-				if (ghostPart.repIndex == 0)
-				{
-					// The concrete part with repIndex 0 has the same position as the serialized body part, no change needed
-					// This should include axial parts as well, since they will be repIndex 0 as well
-					serializedPosition = concretePosition;
-					// NOTE: might not be necessarily true for children of nonaxial symmetrical parts
-				}
-				else
-				{
-					// The concrete parts with repindexes that are not zero have been rotated about the axis
-					// Rotate the new point in the reverse direction for the corresponding serialized part position
-
-					// Get revolution in quaternion form
-					Quaternion r = Quaternion.AngleAxis(-ghostPart.repIndex * 360f / ghostPart.numReps, truePlaxisDirection);
-
-					// Revolve position about axis
-					serializedPosition = r * (concretePosition - truePlaxisPoint) + truePlaxisPoint;
-				}
-				break;
-		}
-
-		// Apply space flipping vectors (if space is not flipped, does nothing);
-		serializedPosition = Vector3.Scale(flipA, serializedPosition);
-
-		return serializedPosition;
-	}
-
-	public void UpdateVisuals()
-	{
-		transform.localPosition = Vector3.zero;
-		transform.localScale = ghostPart.zoomScale * 0.03f * Vector3.one;
-	}
 }
 
 /* Proximal Ball: 
 	* change parent
 	* change isAxial
 	* change numReps (if isAxial is changed)
-	* change position
+	* [DONE] change position
 	* change rotation???
 	* change scale???
 	* change bulkOffset???

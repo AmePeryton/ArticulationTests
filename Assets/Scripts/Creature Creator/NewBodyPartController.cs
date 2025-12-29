@@ -35,12 +35,12 @@ public class NewBodyPartController : MonoBehaviour
 		transform.localPosition = data.position;
 		transform.localEulerAngles = data.rotation;
 
-		bulkHolder.transform.localPosition = data.bulkOffset;
+		bulkHolder.transform.localPosition = 0.5f * data.scale.z * Vector3.forward + data.bulkOffset;
 		bulkHolder.transform.localScale = data.scale;
 
 		// Update bone line renderer
 		boneLineRenderer.positionCount = 2;
-		boneLineRenderer.SetPositions(new Vector3[] { Vector3.zero, (0.5f * data.scale.z + data.bulkOffset.z) * Vector3.forward });
+		boneLineRenderer.SetPositions(new Vector3[] { Vector3.zero, (data.scale.z + data.bulkOffset.z) * Vector3.forward });
 	}
 
 	public void SetSelected(bool isSelected)
@@ -60,10 +60,10 @@ public class NewBodyPartController : MonoBehaviour
 public class ConcreteBodyPartData
 {
 	[Header("Physics")]
-	public Vector3 position;    // meters, from parent proximal point
-	public Vector3 rotation;    // degrees, from parent's forward vector
-	public Vector3 scale;       // meters, bulk size
-	public Vector3 bulkOffset;  // meters, from center between proximal and distal points
+	public Vector3 position;    // Meters, from parent proximal point
+	public Vector3 rotation;    // Degrees, from parent's forward vector
+	public Vector3 scale;       // Meters, bulk size
+	public Vector3 bulkOffset;  // Meters, from center between proximal and distal points
 
 	[Header("Refs")]
 	public SerializedBodyPartData sRef;
@@ -143,15 +143,15 @@ public class SerializedBodyPartData
 	public SymmetryType symmetryType;
 	public bool isAxial;
 	public int numReps;
-	public Vector3 plaxisDirection; // normal direction of the plane of symmetry, or the direction of the axis of symmetry
-	public Vector3 plaxisPoint;     // a point that the plane / axis of symmetry passes through
+	public Vector3 plaxisDirection; // Normal direction of the plane of symmetry, or the direction of the axis of symmetry
+	public Vector3 plaxisPoint;     // A point that the plane / axis of symmetry passes through
 	// Symmetry breaking mask? Maybe later after extensive testing
 
 	[Header("Physics")]
-	public Vector3 position;    // meters, from parent proximal point
-	public Vector3 rotation;    // degrees, from parent's forward vector
-	public Vector3 scale;       // meters, bulk size
-	public Vector3 bulkOffset;  // meters, from center between proximal and distal points
+	public Vector3 position;    // Meters, from parent proximal point
+	public Vector3 rotation;    // Degrees, from parent's forward vector
+	public Vector3 scale;       // Meters, bulk size
+	public Vector3 bulkOffset;  // Meters, from center between proximal and distal points
 
 	// Maximum allowed distance to be considered on the plane / axis
 	private const float ad = 0.000001f;

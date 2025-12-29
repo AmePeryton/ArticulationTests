@@ -24,6 +24,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 
 	[Header("Gizmos")]
 	public NewGizmoProximalBall proximalBall;
+	public NewGizmoDistalBall distalBall;
 
 	[Header("Parts")]
 	// Visuals
@@ -38,7 +39,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public GameObject rotationHolder;
 	// Gizmos
 	//public GameObject proximalBall;
-	public GameObject distalBall;
+	//public GameObject distalBall;
 	public GameObject[] arrows;
 	public GameObject rotationBall;
 	public GameObject[] rotationRings;
@@ -52,7 +53,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	private void Awake()
 	{
 		mainCube.SetActive(false);
-		// TODO: properly activate and deactivate different visuals
+		// TODO: Properly activate and deactivate different visuals
 	}
 
 	private void Update()
@@ -127,8 +128,9 @@ public class NewGhostBodyPartController : MonoBehaviour
 		zoomScale = scaleMult * (zoomFactor * Vector3.Distance(transform.position, Camera.main.transform.position) + 1 - zoomFactor);
 
 		proximalBall.UpdateVisuals();
+		distalBall.UpdateVisuals();
 		//proximalBall.transform.localScale = zoomScale * 0.03f * Vector3.one;
-		distalBall.transform.localScale = zoomScale * 0.02f * Vector3.one;
+		//distalBall.transform.localScale = zoomScale * 0.02f * Vector3.one;
 		advancedGizmoHolder.transform.localScale = zoomScale * 2 * Vector3.one;
 
 		transform.position = parentTransform.TransformPoint(position);
@@ -136,11 +138,11 @@ public class NewGhostBodyPartController : MonoBehaviour
 		Quaternion desiredRotationQuaternion = Quaternion.Euler(rotation);
 		transform.rotation = parentTrueQuaternion * desiredRotationQuaternion;
 
-		bulkHolder.transform.localPosition = bulkOffset;
+		bulkHolder.transform.localPosition = 0.5f * scale.z * Vector3.forward + bulkOffset;
 		bulkHolder.transform.localScale = scale;
 
 		//proximalBall.transform.localPosition = Vector3.zero;
-		distalBall.transform.localPosition = (0.5f * scale.z + bulkOffset.z) * Vector3.forward;
+		//distalBall.transform.localPosition = (0.5f * scale.z + bulkOffset.z) * Vector3.forward;
 
 		if (transform.parent != null)
 		{

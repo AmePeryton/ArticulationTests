@@ -28,7 +28,6 @@ public class NewBodyController : MonoBehaviour
 		{
 			rotation = -90f * Vector3.right,
 			scale = 0.5f * Vector3.one,
-			bulkOffset = 0.25f * Vector3.forward
 		};
 		newSBody.sBodyParts.Add(newSBodyPart);
 		newSBody.sBodyPartIndex++;
