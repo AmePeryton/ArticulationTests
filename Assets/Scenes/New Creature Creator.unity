@@ -8984,10 +8984,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 807030379}
+  - component: {fileID: 807030380}
   - component: {fileID: 807030378}
   - component: {fileID: 807030377}
   - component: {fileID: 807030376}
-  - component: {fileID: 807030380}
   m_Layer: 5
   m_Name: CC UI Canvas
   m_TagString: Untagged
@@ -9145,6 +9145,9 @@ MonoBehaviour:
   - {fileID: 875640882}
   ghostBodyPartPrefab: {fileID: 743270315513593707, guid: 3af277f74b6a6db4685689f0f42fb726,
     type: 3}
+  keyResetCamera: 32
+  keySnap: 306
+  keyDistalToggleMode: 308
 --- !u!1 &828171074
 GameObject:
   m_ObjectHideFlags: 0

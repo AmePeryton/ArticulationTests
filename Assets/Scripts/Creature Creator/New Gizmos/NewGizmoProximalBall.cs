@@ -75,32 +75,26 @@ public class NewGizmoProximalBall : NewGizmoController
 
 		if (newPosition != ghostPart.selectedPart.data.sRef.position)
 		{
-			Debug.Log("Changed position!");
 			return new NewCommandChangePosition(ghostPart.selectedPart.data.sRef, newPosition);
 		}
 		if (newRotation != ghostPart.selectedPart.data.sRef.rotation)
 		{
-			Debug.Log("Changed rotation!");
 			commands.Add(new NewCommandChangeRotation(ghostPart.selectedPart.data.sRef, newRotation));
 		}
 		if (newScale != ghostPart.selectedPart.data.sRef.scale)
 		{
-			Debug.Log("Changed scale!");
 			commands.Add(new NewCommandChangeScale(ghostPart.selectedPart.data.sRef, newScale));
 		}
 		if (newBulkOffset != ghostPart.selectedPart.data.sRef.bulkOffset)
 		{
-			Debug.Log("Changed bulk offset!");
 			commands.Add(new NewCommandChangeBulkOffset(ghostPart.selectedPart.data.sRef, newBulkOffset));
 		}
 		if (newIsAxial != ghostPart.selectedPart.data.sRef.isAxial)
 		{
-			Debug.Log("Toggled is axial!");
 			commands.Add(new NewCommandToggleIsAxial(ghostPart.selectedPart.data.sRef));
 		}
 		if (newNumReps != ghostPart.selectedPart.data.sRef.numReps)
 		{
-			Debug.Log("Changed num reps!");
 			commands.Add(new NewCommandChangeNumReps(ghostPart.selectedPart.data.sRef, newNumReps));
 		}
 
@@ -132,7 +126,7 @@ public class NewGizmoProximalBall : NewGizmoController
 		// Get world position of the mouse at the given depth from the camera
 		Vector3 rawNewPosition = MouseToWorldScreen(depth);
 		// Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
-		Vector3 localNewPosition = ghostPart.body.transform.InverseTransformPoint(rawNewPosition);
+		Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
 		// Set ghost part position to this local position
 		ghostPart.position = localNewPosition;
 	}
@@ -215,8 +209,10 @@ public class NewGizmoProximalBall : NewGizmoController
         Vector3 worldAxis = ghostPart.parentTransform.TransformDirection(truePlaxisDirection);
 		Vector3 worldPoint = ghostPart.parentTransform.TransformPoint(truePlaxisPoint);
 
+		// Get fallback position
+		Vector3 prevPoint = ghostPart.selectedPart.transform.position + (ghostPart.scale.z + ghostPart.bulkOffset.z) * ghostPart.selectedPart.transform.forward;
 		// Get world position of the mouse on the plane
-		Vector3 rawNewPosition = MouseToWorldAxis(worldAxis, worldPoint);
+		Vector3 rawNewPosition = MouseToWorldLine(worldAxis, worldPoint, prevPoint);
         // Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
         Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
         // Set ghost part position to this local position
@@ -231,6 +227,6 @@ public class NewGizmoProximalBall : NewGizmoController
 	* [DONE] change position
 	* change rotation???
 	* change scale???
-	* change bulkOffset???
+	* change bulkOffset??????
 	*/
 // For now, just implement position changing

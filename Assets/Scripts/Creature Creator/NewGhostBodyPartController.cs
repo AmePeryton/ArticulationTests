@@ -1,4 +1,4 @@
-using  UnityEngine;
+using UnityEngine;
 
 public class NewGhostBodyPartController : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public Vector3 position;		// Meters, from parent proximal point
 	public Vector3 rotation;		// Degrees, from parent's forward vector
 	public Vector3 scale;			// Meters, bulk size
-	public Vector3 bulkOffset;      // Meters, from center between proximal and distal points
+	public Vector3 bulkOffset;		// Meters, from center between proximal and distal points
 	public int repIndex;			// The exact repetition that this concrete part represents
 	// Serialized Part Data 
 	public SymmetryType symmetryType;
@@ -45,6 +45,9 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public GameObject[] rotationRings;
 	public GameObject[] bulkQuads;	// Left, Right, Bottom, Top, Back, Front
 
+	[Header("Editor Settings")]
+	public bool isSnappingEnabled;
+
 	[Header("Visual Settings")]
 	public float scaleMult;
 	public float zoomFactor;
@@ -67,6 +70,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 		parentPart = null;
 		parentTransform = body.transform;
 		UpdateSelection(null);
+		distalBall.distalMode = 0;
 	}
 
 	public void UpdateSelection(NewBodyPartController newSelectedPart)
@@ -210,5 +214,17 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public void SetMainCubeVisible(bool isMainCubeVisible)
 	{
 		mainCube.SetActive(isMainCubeVisible);
+	}
+
+	public void CycleDistalMode()
+	{
+		// Change distal editing mode and reset variables to the original copy
+		distalBall.distalMode = (distalBall.distalMode + 1) % 3;
+		CopyVariables(selectedPart);
+	}
+
+	public void SetSnapping(bool newIsSnappingEnabled)
+	{
+		isSnappingEnabled = newIsSnappingEnabled;
 	}
 }

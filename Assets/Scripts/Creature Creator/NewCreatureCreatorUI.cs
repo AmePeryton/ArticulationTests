@@ -48,10 +48,12 @@ public class NewCreatureCreatorUI : MonoBehaviour
 	[Header("Prefabs")]
 	public GameObject ghostBodyPartPrefab;
 
-	// Maximum allowed distance to be considered on the plane / axis
-	private const float ad = 0.000001f;
-	// Maximum allowed angle to be considered on the plane / axis
-	private const float aa = 0.00005f;
+	// Will eventually be moved to a dedicated settings / config file, but fine to keep here for now
+	[Header("Keybinds")]
+	public KeyCode keyResetCamera;
+	public KeyCode keySnap;
+	public KeyCode keyDistalToggleMode;
+
 
 	private void Awake()
 	{
@@ -76,6 +78,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 	private void Update()
 	{
 		MouseNavigation();
+		KeyboardNavigation();
 	}
 
 	// Saves the body's data to a file
@@ -327,11 +330,6 @@ public class NewCreatureCreatorUI : MonoBehaviour
 					}
 				}
 
-				// If spacebar is pressed while no mouse button is pressed, reset the camera
-				if (Input.GetKeyDown(KeyCode.Space))
-				{
-					cameraController.ResetCamera();
-				}
 				break;
 			// Left click being held, either selecting, editing, or doing nothing while awaiting button up
 			case 0:
@@ -378,6 +376,31 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				// Reset the type of object clicked
 				mouseOver = MouseOverType.None;
 			}
+		}
+	}
+
+	// Control variables using the keyboard
+	// May reorgasnize MouseNavigation and KeyboardNavigation to more fitting methods later
+	public void KeyboardNavigation()
+	{
+		// If spacebar is pressed, reset the camera transform
+		if (Input.GetKeyDown(keyResetCamera))
+		{
+			cameraController.ResetCamera();
+		}
+
+		if (Input.GetKeyDown(keyDistalToggleMode))
+		{
+			ghostBodyPartController.CycleDistalMode();
+		}
+
+		if (Input.GetKeyDown(keySnap))
+		{
+			ghostBodyPartController.SetSnapping(true);
+		}
+		if (Input.GetKeyUp(keySnap))
+		{
+			ghostBodyPartController.SetSnapping(false);
 		}
 	}
 
@@ -1190,7 +1213,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				{
 					// Check if the position is on the plane, within a certain allowed distance
 					Plane p = new(selectedPartController.data.sRef.plaxisDirection, selectedPartController.data.sRef.plaxisPoint);
-					if (!MathExt.IsPointOnPlane(p, newPosition, ad))
+					if (!MathExt.IsPointOnPlane(p, newPosition, TechnicalConfig.maxAllowedDistance))
 					{
 						// Bilateral axial body parts must stay on the plane
 						Debug.Log("New position is not on the plane of symmetry!");
@@ -1203,7 +1226,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				if (selectedPartController.data.sRef.isAxial)
 				{
 					// Check if the position is on the axis, within a certain allowed distance
-					if (!MathExt.IsPointOnAxis(selectedPartController.data.sRef.plaxisDirection, selectedPartController.data.sRef.plaxisPoint, newPosition, aa))
+					if (!MathExt.IsPointOnAxis(selectedPartController.data.sRef.plaxisDirection, selectedPartController.data.sRef.plaxisPoint, newPosition, TechnicalConfig.maxAllowedDistance))
 					{
 						// Radial axial body parts must stay on the axis
 						Debug.Log("New position is not on the axis of symmetry!");
@@ -1247,7 +1270,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				{
 					// Check if the rotation is on the plane, within a certain allowed angle
 					Plane p0 = new(selectedPartController.data.sRef.plaxisDirection, Vector3.zero);
-					if (!MathExt.IsRotationOnPlane(p0, newRotation, aa))
+					if (!MathExt.IsRotationOnPlane(p0, newRotation, TechnicalConfig.maxAllowedAngle))
 					{
 						// Bilateral axial body parts must stay rotated on the plane
 						Debug.Log("New rotation is not on the plane of symmetry!");
@@ -1260,7 +1283,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				if (selectedPartController.data.sRef.isAxial)
 				{
 					// Check if the rotation is on the axis, within a certain allowed angle
-					if (!MathExt.IsRotationOnAxis(selectedPartController.data.sRef.plaxisDirection, newRotation, aa))
+					if (!MathExt.IsRotationOnAxis(selectedPartController.data.sRef.plaxisDirection, newRotation, TechnicalConfig.maxAllowedAngle))
 					{
 						// Radial axial body parts must stay rotated on the axis
 						Debug.Log("New rotation is not on the axis of symmetry!");
@@ -1358,6 +1381,20 @@ public class NewCreatureCreatorUI : MonoBehaviour
 
 		DoCommand(new NewCommandChangeScale(selectedPartController.data.sRef, newScale));
 	}
+}
+
+// Readonly values for technical specifications such as angle limits
+public class TechnicalConfig
+{
+	// Maximum allowed distance to be considered on the plane / axis
+	public static readonly float maxAllowedDistance = 0.000001f;
+	// Maximum allowed angle to be considered on the plane / axis
+	public static readonly float maxAllowedAngle = 0.00005f;
+	// The smallest value that a part's scale can have
+	public static readonly float minScale = 0.01f;
+	// The greatest value that a part's scale can have
+	public static readonly float maxScale = 100f;
+
 }
 
 /* TODO:
