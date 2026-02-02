@@ -4856,7 +4856,7 @@ MonoBehaviour:
     speedHorizontal: 8
     speedVertical: 6
     smoothing: 0.9
-    verticalLimits: {x: -80, y: 20}
+    verticalLimits: {x: -80, y: 45}
   zoomSettings:
     defaultDistance: 2
     closest: 0.1

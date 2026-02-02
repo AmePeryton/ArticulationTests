@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1716573237485318040}
+  - component: {fileID: 1415141333655610325}
   - component: {fileID: 5403812833257161120}
   - component: {fileID: 2475224263287506278}
   - component: {fileID: 6013005084416808715}
-  - component: {fileID: 1949634459288771940}
   m_Layer: 6
   m_Name: Quad Top
   m_TagString: Untagged
@@ -35,6 +35,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1415141333655610325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81349455421352975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 1
+  polarity: 1
 --- !u!33 &5403812833257161120
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -113,21 +129,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1949634459288771940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 81349455421352975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 3
 --- !u!1 &743270315513593707
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +196,7 @@ MonoBehaviour:
   gizmoHolder: {fileID: 2112682482851923415}
   normalGizmoHolder: {fileID: 4130371818264271224}
   advancedGizmoHolder: {fileID: 7599889034582199812}
-  bulkGizmoHolder: {fileID: 1428188056117376026}
+  bulkQuadsHolder: {fileID: 1428188056117376026}
   rotationHolder: {fileID: 3219190916147158453}
   arrows:
   - {fileID: 8380005696678767339}
@@ -206,13 +207,7 @@ MonoBehaviour:
   - {fileID: 2466555472789233469}
   - {fileID: 4113164511158762068}
   - {fileID: 8415648737971057635}
-  bulkQuads:
-  - {fileID: 2698636852574666619}
-  - {fileID: 8971909556699006265}
-  - {fileID: 795912060802224601}
-  - {fileID: 81349455421352975}
-  - {fileID: 3254478772912751058}
-  - {fileID: 1677673007799316497}
+  isSnappingEnabled: 0
   scaleMult: 1
   zoomFactor: 0.5
   zoomScale: 0
@@ -225,10 +220,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4030759977421794768}
+  - component: {fileID: 5748915158439026624}
   - component: {fileID: 2586644478363539662}
   - component: {fileID: 8882784159265417076}
   - component: {fileID: 3623803005854836941}
-  - component: {fileID: 9022958449047591271}
   m_Layer: 6
   m_Name: Quad Bottom
   m_TagString: Untagged
@@ -251,6 +246,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!114 &5748915158439026624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795912060802224601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 1
+  polarity: -1
 --- !u!33 &2586644478363539662
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -329,21 +340,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9022958449047591271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795912060802224601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 2
 --- !u!1 &1428188056117376026
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,12 +350,12 @@ GameObject:
   m_Component:
   - component: {fileID: 484721602587854724}
   m_Layer: 6
-  m_Name: Bulk Gizmos
+  m_Name: Bulk Quad Gizmos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &484721602587854724
 Transform:
   m_ObjectHideFlags: 0
@@ -390,10 +386,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6590309500466337528}
+  - component: {fileID: 6485636620414370298}
   - component: {fileID: 749121811985522740}
   - component: {fileID: 6358439809233740024}
   - component: {fileID: 5369056193185055757}
-  - component: {fileID: 4755124828325610032}
   m_Layer: 6
   m_Name: Quad Front
   m_TagString: Untagged
@@ -416,6 +412,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &6485636620414370298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677673007799316497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 2
+  polarity: 1
 --- !u!33 &749121811985522740
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -494,21 +506,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4755124828325610032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1677673007799316497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 5
 --- !u!1 &1734745688475560781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,10 +1158,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 688013824478179199}
+  - component: {fileID: 8742031245712827676}
   - component: {fileID: 2740145313635501689}
   - component: {fileID: 9210484844742987832}
   - component: {fileID: 6128282842956418512}
-  - component: {fileID: 3527016395047201455}
   m_Layer: 6
   m_Name: Quad Left
   m_TagString: Untagged
@@ -1187,6 +1184,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &8742031245712827676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2698636852574666619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 0
+  polarity: -1
 --- !u!33 &2740145313635501689
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1265,21 +1278,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3527016395047201455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2698636852574666619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 0
 --- !u!1 &3219190916147158453
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,10 +1322,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4289915269869773962}
+  - component: {fileID: 2106270079557650114}
   - component: {fileID: 9048827012289292104}
   - component: {fileID: 7510380940869692117}
   - component: {fileID: 7977675170395198453}
-  - component: {fileID: 5320589814643993603}
   m_Layer: 6
   m_Name: Quad Back
   m_TagString: Untagged
@@ -1350,6 +1348,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2106270079557650114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3254478772912751058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 2
+  polarity: -1
 --- !u!33 &9048827012289292104
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1428,21 +1442,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5320589814643993603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254478772912751058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 4
 --- !u!1 &4113164511158762068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,6 +1715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NewGizmoDistalBall
   ghostPart: {fileID: 7380039637468821790}
   hitPosition: {x: 0, y: 0, z: 0}
+  distalMode: 0
 --- !u!33 &776861233087030175
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2408,10 +2408,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4211696133412988313}
+  - component: {fileID: 4103253490306332412}
   - component: {fileID: 8366902041800160612}
   - component: {fileID: 7690106032399516946}
   - component: {fileID: 6335180272351534440}
-  - component: {fileID: 4305244393659068937}
   m_Layer: 6
   m_Name: Quad Right
   m_TagString: Untagged
@@ -2434,6 +2434,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 484721602587854724}
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
+--- !u!114 &4103253490306332412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971909556699006265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18d8a99d97d29f4ca04470147311f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewGizmoBulkQuad
+  ghostPart: {fileID: 7380039637468821790}
+  hitPosition: {x: 0, y: 0, z: 0}
+  axis: 0
+  polarity: 1
 --- !u!33 &8366902041800160612
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2512,18 +2528,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4305244393659068937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8971909556699006265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ad11f72d74a134d9027387e14e85f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPart: {fileID: 0}
-  hitPosition: {x: 0, y: 0, z: 0}
-  index: 1

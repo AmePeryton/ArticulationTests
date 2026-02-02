@@ -204,8 +204,8 @@ public class NewGizmoDistalBall : NewGizmoController
 	private void MoveOnRadiusCircle()
 	{
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())
@@ -244,8 +244,8 @@ public class NewGizmoDistalBall : NewGizmoController
 	private void MoveOnRadiusLine()
 	{
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())
@@ -309,8 +309,8 @@ public class NewGizmoDistalBall : NewGizmoController
 	private void MoveOnPlane()
 	{
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())
@@ -353,8 +353,8 @@ public class NewGizmoDistalBall : NewGizmoController
 	private void MoveOnAxis()
 	{
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())

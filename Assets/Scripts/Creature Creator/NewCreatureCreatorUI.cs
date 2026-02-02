@@ -14,7 +14,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 
 	[Header("Selection / Mouse Navigation")]
 	public int currentMouseButton;	// The current button being held (or the first held, if multiple)
-	public MouseOverType mouseOver; // What the mouse was over when the current mouse button down started
+	public MouseOverType mouseOver;	// What the mouse was over when the current mouse button down started
 	public CreatureCreatorCameraController cameraController;
 	public NewBodyPartController selectedPartController;
 	// Used to identify the selected part after the concrete body is reloaded
@@ -106,7 +106,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 	// Rebuilds the entire concrete body from the stored serialized body and remakes the body part controllers
 	public void ConstructConcreteBodyAndControllers()
 	{
-		selectedPartController = null;  // Invalidate previous selected part controller
+		selectedPartController = null;	// Invalidate previous selected part controller
 		bodyController.ConstructConcreteBodyAndControllers();
 	}
 
@@ -287,7 +287,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 						// Update the UI on a new selection
 						UpdateUI();
 						break;
-					case MouseOverType.Gizmo:	// TODO: gizmo editing
+					case MouseOverType.Gizmo:
 						// If clicked a gizmo, begin interaction with it
 						heldGizmo = clickedObject.GetComponent<NewGizmoController>();
 						heldGizmo.InteractStart(heldGizmo.transform.InverseTransformPoint(hitPosition));
@@ -1391,10 +1391,9 @@ public class TechnicalConfig
 	// Maximum allowed angle to be considered on the plane / axis
 	public static readonly float maxAllowedAngle = 0.00005f;
 	// The smallest value that a part's scale can have
-	public static readonly float minScale = 0.01f;
+	public static readonly float minScale = 0.1f;
 	// The greatest value that a part's scale can have
 	public static readonly float maxScale = 100f;
-
 }
 
 /* TODO:

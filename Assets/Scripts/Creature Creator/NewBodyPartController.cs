@@ -14,7 +14,7 @@ public class NewBodyPartController : MonoBehaviour
 	public GameObject bulkHolder;
 	public GameObject highlightCube;
 	public LineRenderer boneLineRenderer;
-	public Collider surfaceCollider;    // Mainly used for raycasts
+	public Collider surfaceCollider;	// Mainly used for raycasts
 
 	private void Update()
 	{
@@ -60,10 +60,10 @@ public class NewBodyPartController : MonoBehaviour
 public class ConcreteBodyPartData
 {
 	[Header("Physics")]
-	public Vector3 position;    // Meters, from parent proximal point
-	public Vector3 rotation;    // Degrees, from parent's forward vector
-	public Vector3 scale;       // Meters, bulk size
-	public Vector3 bulkOffset;  // Meters, from center between proximal and distal points
+	public Vector3 position;	// Meters, from parent proximal point
+	public Vector3 rotation;	// Degrees, from parent's forward vector
+	public Vector3 scale;		// Meters, bulk size
+	public Vector3 bulkOffset;	// Meters, from center between proximal and distal points
 
 	[Header("Refs")]
 	public SerializedBodyPartData sRef;
@@ -143,15 +143,15 @@ public class SerializedBodyPartData
 	public SymmetryType symmetryType;
 	public bool isAxial;
 	public int numReps;
-	public Vector3 plaxisDirection; // Normal direction of the plane of symmetry, or the direction of the axis of symmetry
-	public Vector3 plaxisPoint;     // A point that the plane / axis of symmetry passes through
+	public Vector3 plaxisDirection;	// Normal direction of the plane of symmetry, or the direction of the axis of symmetry
+	public Vector3 plaxisPoint;		// A point that the plane / axis of symmetry passes through
 	// Symmetry breaking mask? Maybe later after extensive testing
 
 	[Header("Physics")]
-	public Vector3 position;    // Meters, from parent proximal point
-	public Vector3 rotation;    // Degrees, from parent's forward vector
-	public Vector3 scale;       // Meters, bulk size
-	public Vector3 bulkOffset;  // Meters, from center between proximal and distal points
+	public Vector3 position;	// Meters, from parent proximal point
+	public Vector3 rotation;	// Degrees, from parent's forward vector
+	public Vector3 scale;		// Meters, bulk size
+	public Vector3 bulkOffset;	// Meters, from center between proximal and distal points
 
 	// Maximum allowed distance to be considered on the plane / axis
 	private const float ad = 0.000001f;

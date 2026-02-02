@@ -187,37 +187,37 @@ public class NewGizmoProximalBall : NewGizmoController
 	// Move the proximal ball on the axis of symmetry
 	private void MoveOnAxis()
 	{
-        // Space flipping variables (if rep index chain has an odd number of reflected parts)
-        Vector3 flipA = Vector3.one;    // For positions
-        Vector3 flipB = Vector3.one;    // For rotations / directions
-        if (ghostPart.parentPart != null)
-        {
-            if (ghostPart.parentPart.data.IsSpaceFlipped())
-            {
-                // If the parent part's space (the one that this part moves in) is reflected, set flip variables
-                flipA = new(-1, 1, 1);
-                flipB = new(1, -1, -1);
-            }
-        }
+		// Space flipping variables (if rep index chain has an odd number of reflected parts)
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
+		if (ghostPart.parentPart != null)
+		{
+			if (ghostPart.parentPart.data.IsSpaceFlipped())
+			{
+				// If the parent part's space (the one that this part moves in) is reflected, set flip variables
+				flipA = new(-1, 1, 1);
+				flipB = new(1, -1, -1);
+			}
+		}
 
-        // Get true plaxis direction
-        Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
-        // Get true plaxis point
-        Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
+		// Get true plaxis direction
+		Vector3 truePlaxisDirection = Vector3.Scale(flipB, ghostPart.plaxisDirection);
+		// Get true plaxis point
+		Vector3 truePlaxisPoint = Vector3.Scale(flipA, ghostPart.plaxisPoint);
 
 		// Translate the axis and point from the parent's space into world space
-        Vector3 worldAxis = ghostPart.parentTransform.TransformDirection(truePlaxisDirection);
+		Vector3 worldAxis = ghostPart.parentTransform.TransformDirection(truePlaxisDirection);
 		Vector3 worldPoint = ghostPart.parentTransform.TransformPoint(truePlaxisPoint);
 
 		// Get fallback position
 		Vector3 prevPoint = ghostPart.selectedPart.transform.position + (ghostPart.scale.z + ghostPart.bulkOffset.z) * ghostPart.selectedPart.transform.forward;
 		// Get world position of the mouse on the plane
 		Vector3 rawNewPosition = MouseToWorldLine(worldAxis, worldPoint, prevPoint);
-        // Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
-        Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
-        // Set ghost part position to this local position
-        ghostPart.position = localNewPosition;
-    }
+		// Get the point in the part's parent's local space (since it is the root, the parent is just the body controler)
+		Vector3 localNewPosition = ghostPart.parentTransform.InverseTransformPoint(rawNewPosition);
+		// Set ghost part position to this local position
+		ghostPart.position = localNewPosition;
+	}
 }
 
 /* Proximal Ball: 

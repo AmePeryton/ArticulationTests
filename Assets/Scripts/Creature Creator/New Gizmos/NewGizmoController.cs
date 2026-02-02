@@ -19,9 +19,7 @@ public abstract class NewGizmoController : MonoBehaviour
 	{
 		this.hitPosition = hitPosition;
 	}
-
 	//public virtual void InteractCancel() { }
-
 	public abstract void InteractHold();
 	public abstract INewEditCommand InteractEnd();
 	public abstract void UpdateVisuals();
@@ -187,8 +185,8 @@ public abstract class NewGizmoController : MonoBehaviour
 		Vector3 serializedPosition = new();
 
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipA = Vector3.one;    // For positions
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipA = Vector3.one;	// For positions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())
@@ -259,7 +257,7 @@ public abstract class NewGizmoController : MonoBehaviour
 		Vector3 serializedRotation = concreteRotation;
 
 		// Space flipping variables (if rep index chain has an odd number of reflected parts)
-		Vector3 flipB = Vector3.one;    // For rotations / directions
+		Vector3 flipB = Vector3.one;	// For rotations / directions
 		if (ghostPart.parentPart != null)
 		{
 			if (ghostPart.parentPart.data.IsSpaceFlipped())

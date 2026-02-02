@@ -35,7 +35,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public GameObject gizmoHolder;
 	public GameObject normalGizmoHolder;
 	public GameObject advancedGizmoHolder;
-	public GameObject bulkGizmoHolder;
+	public GameObject bulkQuadsHolder;
 	public GameObject rotationHolder;
 	// Gizmos
 	//public GameObject proximalBall;
@@ -43,7 +43,7 @@ public class NewGhostBodyPartController : MonoBehaviour
 	public GameObject[] arrows;
 	public GameObject rotationBall;
 	public GameObject[] rotationRings;
-	public GameObject[] bulkQuads;	// Left, Right, Bottom, Top, Back, Front
+	//public GameObject[] bulkQuads;	// Left, Right, Bottom, Top, Back, Front
 
 	[Header("Editor Settings")]
 	public bool isSnappingEnabled;
@@ -133,8 +133,6 @@ public class NewGhostBodyPartController : MonoBehaviour
 
 		proximalBall.UpdateVisuals();
 		distalBall.UpdateVisuals();
-		//proximalBall.transform.localScale = zoomScale * 0.03f * Vector3.one;
-		//distalBall.transform.localScale = zoomScale * 0.02f * Vector3.one;
 		advancedGizmoHolder.transform.localScale = zoomScale * 2 * Vector3.one;
 
 		transform.position = parentTransform.TransformPoint(position);
@@ -144,9 +142,6 @@ public class NewGhostBodyPartController : MonoBehaviour
 
 		bulkHolder.transform.localPosition = 0.5f * scale.z * Vector3.forward + bulkOffset;
 		bulkHolder.transform.localScale = scale;
-
-		//proximalBall.transform.localPosition = Vector3.zero;
-		//distalBall.transform.localPosition = (0.5f * scale.z + bulkOffset.z) * Vector3.forward;
 
 		if (transform.parent != null)
 		{
@@ -158,8 +153,8 @@ public class NewGhostBodyPartController : MonoBehaviour
 		}
 		rotationHolder.transform.rotation = transform.rotation;
 
-		bulkGizmoHolder.transform.localPosition = bulkOffset;
-		bulkGizmoHolder.transform.localScale = scale;
+		bulkQuadsHolder.transform.localPosition = 0.5f * scale.z * Vector3.forward + bulkOffset;
+		bulkQuadsHolder.transform.localScale = scale;
 
 		if (selectedPart != null)
 		{
@@ -186,22 +181,22 @@ public class NewGhostBodyPartController : MonoBehaviour
 			case EditMode.Normal:	// Normal
 				normalGizmoHolder.SetActive(true);
 				advancedGizmoHolder.SetActive(false);
-				bulkGizmoHolder.SetActive(false);
+				bulkQuadsHolder.SetActive(false);
 				break;
 			case EditMode.Advanced:	// Advanced
 				normalGizmoHolder.SetActive(false);
 				advancedGizmoHolder.SetActive(true);
-				bulkGizmoHolder.SetActive(false);
+				bulkQuadsHolder.SetActive(false);
 				break;
 			case EditMode.Bulk:		// Bulk
 				normalGizmoHolder.SetActive(false);
 				advancedGizmoHolder.SetActive(false);
-				bulkGizmoHolder.SetActive(true);
+				bulkQuadsHolder.SetActive(true);
 				break;
 			default:
 				normalGizmoHolder.SetActive(false);
 				advancedGizmoHolder.SetActive(false);
-				bulkGizmoHolder.SetActive(false);
+				bulkQuadsHolder.SetActive(false);
 				break;
 		}
 	}
