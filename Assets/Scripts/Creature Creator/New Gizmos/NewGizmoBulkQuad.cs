@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,74 +8,75 @@ public class NewGizmoBulkQuad : NewGizmoController
 	private BulkQuadAxis axis;
 	[SerializeField]
 	private int polarity;
+	[SerializeField]
+	private float[] prevDists;	// The previous distances of each face from the origin point
 
 	// On start of interaction with this gizmo
-	public override void InteractStart(Vector3 hitPosition)
+	public override void InteractStart(Vector3 clickPosition)
 	{
-		base.InteractStart(hitPosition);
+		base.InteractStart(clickPosition);
 		ghostPart.SetMainCubeVisible(true);
+		prevDists = new float[6]{ 
+			-0.5f * ghostPart.scale.x + ghostPart.bulkOffset.x,
+			0.5f * ghostPart.scale.x + ghostPart.bulkOffset.x,
+			-0.5f * ghostPart.scale.y + ghostPart.bulkOffset.y,
+			0.5f * ghostPart.scale.y + ghostPart.bulkOffset.y,
+			ghostPart.bulkOffset.z,
+			ghostPart.scale.z + ghostPart.bulkOffset.z};
+		//Debug.Log(prevDists[0] + ", " + prevDists[1] + ", " + prevDists[2] + ", " + prevDists[3] + ", " + prevDists[4] + ", " + prevDists[5]);
 	}
 
 	// On continuous interaction with this gizmo
 	public override void InteractHold()
 	{
-		// TODO: rework this to not need to raycast to the surface every frame, maybe use MouseToWorldLine through the original hitpoint and along the axis being changed
-		Vector3 surfaceHitPosition = new(hitPosition.x, hitPosition.y, 0);
-		Vector3 rawNewPosition = MouseToWorldPlane(new(-Camera.main.transform.forward.normalized, 
-			transform.TransformPoint(surfaceHitPosition))) - (transform.TransformPoint(hitPosition) - transform.position);
+		// The current position of the mouse projected onto the line along the quad face normal and intersecting the clickPosition, in world space
+		Vector3 rawNewPosition = MouseToWorldLine(transform.forward, clickPosition);
+
+		// The current position of the mouse projected to the line, in the ghost part's local space
 		Vector3 localNewPosition = ghostPart.transform.InverseTransformPoint(rawNewPosition);
 
-		float diff;
-		Vector3 scaleDiff = new();
-		Vector3 offsetDiff = new();
+		float[] newDists = new float[6];
+		Array.Copy(prevDists, newDists, 6);
+
+		int ind = 2 * (int)axis + ((polarity + 1) / 2);
 		switch (axis)
 		{
 			case BulkQuadAxis.X:
-				diff = polarity * Mathf.Max(polarity * localNewPosition.x, TechnicalConfig.minScale / 2) - (ghostPart.bulkOffset.x + polarity * (ghostPart.scale.x / 2));
-				scaleDiff.x += polarity * diff;
-				offsetDiff.x += diff / 2;
+				newDists[ind] = polarity * Mathf.Clamp(polarity * localNewPosition.x, 0.5f * TechnicalConfig.minScale, 0.5f * TechnicalConfig.maxScale);
 				break;
 			case BulkQuadAxis.Y:
-				diff = polarity * Mathf.Max(polarity * localNewPosition.y, TechnicalConfig.minScale / 2) - (ghostPart.bulkOffset.y + polarity * (ghostPart.scale.y / 2));
-				scaleDiff.y += polarity * diff;
-				offsetDiff.y += diff / 2;
+				newDists[ind] = polarity * Mathf.Clamp(polarity * localNewPosition.y, 0.5f * TechnicalConfig.minScale, 0.5f * TechnicalConfig.maxScale);
 				break;
 			case BulkQuadAxis.Z:
-				// TODO: fix Z axis bulk limits
-				localNewPosition.z -= ghostPart.scale.z / 2;
-				diff = localNewPosition.z - (ghostPart.bulkOffset.z + polarity * (ghostPart.scale.z / 2));
-				scaleDiff.z += polarity * diff;
-				offsetDiff.z += diff * (1 - polarity) / 2;
+				int mod = (polarity - 1) / 2;
+				newDists[ind] = polarity * Mathf.Clamp(polarity * localNewPosition.z, TechnicalConfig.minScale + mod * TechnicalConfig.minScale, TechnicalConfig.maxScale + mod * TechnicalConfig.minScale);
 				break;
 		}
 
 		if (ghostPart.isAxial)
 		{
-			if (ghostPart.symmetryType == SymmetryType.Bilateral)
+			float abs = MathF.Abs(newDists[ind]);
+			if (ghostPart.symmetryType == SymmetryType.Bilateral && axis == BulkQuadAxis.X)
 			{
-				scaleDiff.x *= 2;
-				offsetDiff.x = 0;
+				newDists[0] = -abs;
+				newDists[1] = abs;
 			}
-			else if (ghostPart.symmetryType == SymmetryType.RadialRotate)
+			else if (ghostPart.symmetryType == SymmetryType.RadialRotate && axis != BulkQuadAxis.Z)
 			{
-				if (axis == BulkQuadAxis.X)
-				{
-					scaleDiff.x *= 2;
-					scaleDiff.y = scaleDiff.x;
-					offsetDiff.x = 0;
-
-				}
-				else if (axis == BulkQuadAxis.Y)
-				{
-					scaleDiff.y *= 2;
-					scaleDiff.x = scaleDiff.y;
-					offsetDiff.y = 0;
-				}
+				newDists[0] = -abs;
+				newDists[1] = abs;
+				newDists[2] = -abs;
+				newDists[3] = abs;
 			}
 		}
 
-		ghostPart.scale += scaleDiff;
-		ghostPart.bulkOffset += offsetDiff;
+		// Calculate the new scale from face dists
+		Vector3 newScale = new(newDists[1] - newDists[0], newDists[3] - newDists[2], newDists[5] - newDists[4]);
+		// Calculate the new bulk offset from face dists
+		Vector3 newBulkOffset = new(0.5f * (newDists[0] + newDists[1]), 0.5f * (newDists[2] + newDists[3]), newDists[4]);
+
+		ghostPart.scale = newScale;
+		ghostPart.bulkOffset = newBulkOffset;
 	}
 
 	// On ending interaction with this gizmo, return an editCommand or multiEditCommand based on changes taken
@@ -118,7 +120,7 @@ public class NewGizmoBulkQuad : NewGizmoController
 
 	private enum BulkQuadAxis
 	{
-		X,
+		X = 0,
 		Y,
 		Z
 	}

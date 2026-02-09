@@ -270,7 +270,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 				// If M1 is pressed this frame, update currentMouseButton
 				currentMouseButton = 0;
 
-				// Get the type of object clicked, and if applicable, the GameObject and hit position of the click
+				// Get the type of object clicked, and if applicable, the GameObject and hit position of the click in world space
 				mouseOver = GetMouseOver(out GameObject clickedObject, out Vector3 hitPosition);
 
 				// Because selecting is a one-time thing, deal with that here instead of continuously while M1 is held
@@ -290,7 +290,7 @@ public class NewCreatureCreatorUI : MonoBehaviour
 					case MouseOverType.Gizmo:
 						// If clicked a gizmo, begin interaction with it
 						heldGizmo = clickedObject.GetComponent<NewGizmoController>();
-						heldGizmo.InteractStart(heldGizmo.transform.InverseTransformPoint(hitPosition));
+						heldGizmo.InteractStart(hitPosition);
 						break;
 					default:
 						break;
@@ -521,30 +521,30 @@ public class NewCreatureCreatorUI : MonoBehaviour
 			inputBulkOffset[1].interactable = true;
 			inputBulkOffset[2].interactable = true;
 
-			inputSelectId.SetTextWithoutNotify(selectedPartController.data.sRef.id.ToString());
-			inputBodyPartId.SetTextWithoutNotify(selectedPartController.data.sRef.id.ToString());
-			inputParentId.SetTextWithoutNotify(selectedPartController.data.sRef.parentId.ToString());
+			inputSelectId.SetTextWithoutNotify(selectedPartController.data.sRef.id.ToString("D"));
+			inputBodyPartId.SetTextWithoutNotify(selectedPartController.data.sRef.id.ToString("D"));
+			inputParentId.SetTextWithoutNotify(selectedPartController.data.sRef.parentId.ToString("D"));
 			dropdownSymmetryType.SetValueWithoutNotify((int)selectedPartController.data.sRef.symmetryType);
 			toggleIsAxial.SetIsOnWithoutNotify(selectedPartController.data.sRef.isAxial);
-			inputNumReps.SetTextWithoutNotify(selectedPartController.data.sRef.numReps.ToString());
-			inputPlaxisDirection[0].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.x.ToString());
-			inputPlaxisDirection[1].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.y.ToString());
-			inputPlaxisDirection[2].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.z.ToString());
-			inputPlaxisPoint[0].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.x.ToString());
-			inputPlaxisPoint[1].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.y.ToString());
-			inputPlaxisPoint[2].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.z.ToString());
-			inputPosition[0].SetTextWithoutNotify(selectedPartController.data.sRef.position.x.ToString());
-			inputPosition[1].SetTextWithoutNotify(selectedPartController.data.sRef.position.y.ToString());
-			inputPosition[2].SetTextWithoutNotify(selectedPartController.data.sRef.position.z.ToString());
-			inputRotation[0].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.x.ToString());
-			inputRotation[1].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.y.ToString());
-			inputRotation[2].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.z.ToString());
-			inputScale[0].SetTextWithoutNotify(selectedPartController.data.sRef.scale.x.ToString());
-			inputScale[1].SetTextWithoutNotify(selectedPartController.data.sRef.scale.y.ToString());
-			inputScale[2].SetTextWithoutNotify(selectedPartController.data.sRef.scale.z.ToString());
-			inputBulkOffset[0].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.x.ToString());
-			inputBulkOffset[1].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.y.ToString());
-			inputBulkOffset[2].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.z.ToString());
+			inputNumReps.SetTextWithoutNotify(selectedPartController.data.sRef.numReps.ToString("D"));
+			inputPlaxisDirection[0].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.x.ToString("0.##"));
+			inputPlaxisDirection[1].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.y.ToString("0.##"));
+			inputPlaxisDirection[2].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisDirection.z.ToString("0.##"));
+			inputPlaxisPoint[0].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.x.ToString("0.##"));
+			inputPlaxisPoint[1].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.y.ToString("0.##"));
+			inputPlaxisPoint[2].SetTextWithoutNotify(selectedPartController.data.sRef.plaxisPoint.z.ToString("0.##"));
+			inputPosition[0].SetTextWithoutNotify(selectedPartController.data.sRef.position.x.ToString("0.##"));
+			inputPosition[1].SetTextWithoutNotify(selectedPartController.data.sRef.position.y.ToString("0.##"));
+			inputPosition[2].SetTextWithoutNotify(selectedPartController.data.sRef.position.z.ToString("0.##"));
+			inputRotation[0].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.x.ToString("0.##"));
+			inputRotation[1].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.y.ToString("0.##"));
+			inputRotation[2].SetTextWithoutNotify(selectedPartController.data.sRef.rotation.z.ToString("0.##"));
+			inputScale[0].SetTextWithoutNotify(selectedPartController.data.sRef.scale.x.ToString("0.##"));
+			inputScale[1].SetTextWithoutNotify(selectedPartController.data.sRef.scale.y.ToString("0.##"));
+			inputScale[2].SetTextWithoutNotify(selectedPartController.data.sRef.scale.z.ToString("0.##"));
+			inputBulkOffset[0].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.x.ToString("0.##"));
+			inputBulkOffset[1].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.y.ToString("0.##"));
+			inputBulkOffset[2].SetTextWithoutNotify(selectedPartController.data.sRef.bulkOffset.z.ToString("0.##"));
 		}
 		else
 		{
@@ -1391,7 +1391,7 @@ public class TechnicalConfig
 	// Maximum allowed angle to be considered on the plane / axis
 	public static readonly float maxAllowedAngle = 0.00005f;
 	// The smallest value that a part's scale can have
-	public static readonly float minScale = 0.1f;
+	public static readonly float minScale = 0.1f;	// TODO: change back to reasonable value after testing
 	// The greatest value that a part's scale can have
 	public static readonly float maxScale = 100f;
 }

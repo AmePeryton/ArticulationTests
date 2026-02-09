@@ -4,14 +4,9 @@ using UnityEngine;
 public class NewGizmoProximalBall : NewGizmoController
 {
 	// On start of interaction with this gizmo
-	public override void InteractStart(Vector3 hitPosition)
+	public override void InteractStart(Vector3 clickPosition)
 	{
-		/* Needs to know:
-			* the selected part controller (along with its concrete and serialized data)
-			* the selected part's current parent
-			* the body controller (multiple reasons, including the transform and the body data to sift through)
-		 */
-		base.InteractStart(hitPosition);
+		base.InteractStart(clickPosition);
 		ghostPart.SetMainCubeVisible(true);
 	}
 

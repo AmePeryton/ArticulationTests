@@ -5,7 +5,7 @@ public abstract class NewGizmoController : MonoBehaviour
 {
 	public NewGhostBodyPartController ghostPart;
 
-	public Vector3 hitPosition;
+	public Vector3 clickPosition;	// The position of the first M1 down frame in world space
 
 	// Minimum scale value
 	protected const float scaleLimit = 0.05f;
@@ -15,9 +15,9 @@ public abstract class NewGizmoController : MonoBehaviour
 	protected const float snapAngle = 15;
 	// TODO: move these keys and snap settings to some other settings controller thing
 
-	public virtual void InteractStart(Vector3 hitPosition)
+	public virtual void InteractStart(Vector3 clickPosition)
 	{
-		this.hitPosition = hitPosition;
+		this.clickPosition = clickPosition;
 	}
 	//public virtual void InteractCancel() { }
 	public abstract void InteractHold();

@@ -10,9 +10,9 @@ public class NewGizmoDistalBall : NewGizmoController
 		* 2: both */
 
 	// On start of interaction with this gizmo
-	public override void InteractStart(Vector3 hitPosition)
+	public override void InteractStart(Vector3 clickPosition)
 	{
-		base.InteractStart(hitPosition);
+		base.InteractStart(clickPosition);
 		ghostPart.SetMainCubeVisible(true);
 	}
 
